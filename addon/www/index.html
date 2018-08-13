@@ -1,0 +1,46 @@
+README<br />
+======<br />
+<br />
+Script:<br />
+string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl IP COMMAND ARGUMENT",&stderr,&stdout);<br />
+<br />
+Commands:<br />
+<ul>
+  <li>touch</li>
+  <li>volume</li>
+</ul><br />
+Arguments for the touch command:<br />
+<ul>
+  <li>PLAY</li>
+  <li>PAUSE</li>
+<li>STOP</li>
+<li>PREV_TRACK</li>
+<li>NEXT_TRACK</li>
+<li>THUMBS_UP</li>
+<li>THUMBS_DOWN</li>
+<li>POWER</li>
+<li>MUTE</li>
+<li>VOLUME_UP</li>
+<li>VOLUME_DOWN</li>
+<li>PRESET_1</li>
+<li>PRESET_2</li>
+<li>PRESET_3</li>
+<li>PRESET_4</li>
+<li>PRESET_5</li>
+<li>PRESET_6</li>
+<li>AUX_INPUT</li>
+<li>SHUFFLE_OFF</li>
+<li>SHUFFLE_ON</li>
+<li>REPEAT_OFF</li>
+<li>REPEAT_ONE</li>
+<li>REPEAT_ALL</li>
+<li>PLAY_PAUSE</li>
+</ul>
+<br />
+Argument for the volume command is the new volume as number. if there is no argument the current volume will be fetched from the device.
+<br />
+<br />
+CCU Variables:<br />
+BOSE_POWER_IP - Logic Variable - System is on or off<br />
+BOSE_VOLUME_IP - Number - Current Volume <br />
+BOSE_STATE_IP - String - Current Device State
