@@ -10,19 +10,19 @@ Sample Scripts:
 
 Switch SoundTouch off
 
-'''
+`
 string ip = "192.168.___.___";
 string stdout;string stderr;
 system.Exec("/usr/local/addons/soundtouch/state.tcl "#ip,&stderr,&stdout);
 if (dom.GetObject("BOSE_POWER_"#ip).State()==true) {
   system.Exec("/usr/local/addons/soundtouch/state.tcl "#ip#" touch POWER",&stderr,&stdout);
 }
-'''
+`
 
 
 Switch SoundTouch on and play Preset 1
 
-'''
+`
 string ip = "192.168.___.___";
 string stdout;string stderr;
 system.Exec("/usr/local/addons/soundtouch/state.tcl "#ip,&stderr,&stdout);
@@ -32,4 +32,4 @@ if (dom.GetObject("BOSE_POWER_"#ip).State()==false) {
 }
 system.Exec("/usr/local/addons/soundtouch/state.tcl "#ip#" touch PRESET_1",&stderr,&stdout);
 system.Exec("/usr/local/addons/soundtouch/state.tcl "#ip#" touch PLAY",&stderr,&stdout);
-'''
+`
