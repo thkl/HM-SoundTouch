@@ -16,10 +16,10 @@ system.Exec("/usr/local/addons/soundtouch/add.tcl 192.168.___.___",&stderr,&stdo
 WriteLine(stderr);
 ```
 
-This will ask the player for its name and add it to the config. See output for any messages
+This will ask the player for its name and add it to the config. See output for any messages.
 If a new player was found, this will also create all variables for that device at your ccu. 
 
-Switch SoundTouch off
+Switch SoundTouch with name Test off
 
 ```
 string name = "Test";
@@ -31,7 +31,7 @@ if (dom.GetObject("BOSE_POWER_"#name).State()==true) {
 ```
 
 
-Switch SoundTouch on and play Preset 1
+Switch SoundTouch with name Test on and play Preset 1
 
 ```
 string name = "Test";
@@ -46,7 +46,7 @@ system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch PLAY",&stderr
 ```
 
 
-Query all known players
+Query all known players and update ccu variables
 
 ```
 string stdout;string stderr;
