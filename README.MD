@@ -17,7 +17,7 @@ WriteLine(stderr);
 ```
 
 This will ask the player for its name and add it to the config. See output for any messages
-
+If a new player was found, this will also create all variables for that device at your ccu. 
 
 Switch SoundTouch off
 
