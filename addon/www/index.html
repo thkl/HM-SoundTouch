@@ -1,8 +1,20 @@
 README<br />
 ======<br />
 <br />
-Script:<br />
-string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl IP COMMAND ARGUMENT",&stderr,&stdout);<br />
+First you have to add players to config
+
+string stdout;string stderr;<br />
+system.Exec("/usr/local/addons/soundtouch/add.tcl 192.168.___.___",&stderr,&stdout);<br />
+WriteLine(stderr);<br />
+<br />
+At this point (if add was successfully) you can use the players name to address the device ...
+<br />
+Query State of all Known players:<br />
+string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl",&stderr,&stdout);<br />
+<br />
+<br />
+General Script to send Commands to a device:<br />
+string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl NAME COMMAND ARGUMENT",&stderr,&stdout);<br />
 <br />
 Commands:<br />
 <ul>
@@ -41,6 +53,6 @@ Argument for the volume command is the new volume as number. if there is no argu
 <br />
 <br />
 CCU Variables:<br />
-BOSE_POWER_IP - Logic Variable - System is on or off<br />
-BOSE_VOLUME_IP - Number - Current Volume <br />
-BOSE_STATE_IP - String - Current Device State
+BOSE_POWER_NAME - Logic Variable - System is on or off<br />
+BOSE_VOLUME_NAME - Number - Current Volume <br />
+BOSE_STATE_NAME - String - Current Device State
