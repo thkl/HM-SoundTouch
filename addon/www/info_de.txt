@@ -1,0 +1,53 @@
+Anleitung<br />
+======<br />
+<br />
+Als Erstes müssen die vorhandenen Soundtouch Player der Erweiterung bekannt gemacht werden. Nutze dazu die Player hinzufügen Funktion.<br />
+<br />
+Ab diesem Zeitpunkt (wenn das Hinzufügen erfolgreich war) kannst Du die Namen der Player benutzen, um diese anzusprechen ...
+<br />
+
+<br />
+Script:<br />
+string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl NAME KOMMANDO ARGUMENT",&stderr,&stdout);<br />
+<br />
+Kommandos:<br />
+<ul>
+  <li>touch</li>
+  <li>volume</li>
+</ul><br />
+Argumente für das Touch Kommando:<br />
+<ul>
+  <li>PLAY</li>
+  <li>PAUSE</li>
+<li>STOP</li>
+<li>PREV_TRACK</li>
+<li>NEXT_TRACK</li>
+<li>THUMBS_UP</li>
+<li>THUMBS_DOWN</li>
+<li>POWER</li>
+<li>MUTE</li>
+<li>VOLUME_UP</li>
+<li>VOLUME_DOWN</li>
+<li>PRESET_1</li>
+<li>PRESET_2</li>
+<li>PRESET_3</li>
+<li>PRESET_4</li>
+<li>PRESET_5</li>
+<li>PRESET_6</li>
+<li>AUX_INPUT</li>
+<li>SHUFFLE_OFF</li>
+<li>SHUFFLE_ON</li>
+<li>REPEAT_OFF</li>
+<li>REPEAT_ONE</li>
+<li>REPEAT_ALL</li>
+<li>PLAY_PAUSE</li>
+</ul>
+<br />
+Das Argument für das Volume Kommando ist die gewünschte neue Lautstärke als Zahl. Wenn keine Lautstärke angegeben wurde, wird die aktuelle Lautstärke aus dem Player gelesen.
+<br />
+<br />
+CCU Variablen:<br />
+BOSE_POWER_NAME - Logic Variable - Ist der Player ein oder ausgeschalten<br />
+BOSE_VOLUME_NAME - Zahl - aktuelle Lautstärke<br />
+BOSE_STATE_NAME - Zeichenkette - aktueller Zustand des Players<br />
+BOSE_STATE_TRACK - Zeichenkette - aktuelle gespielter Track<br />
