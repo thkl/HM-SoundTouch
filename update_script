@@ -30,6 +30,7 @@ chmod 755 "${ADDON_DIR}"
 echo "install addon files" >>$LOG_FILE
 [ -d addon ] && cp -af addon/* ${ADDON_DIR}/
 [ -f VERSION ] && cp VERSION ${ADDON_DIR}/
+[ -f update_addon ] && cp update_addon ${ADDON_DIR}/
 chown -R root:root ${ADDON_DIR}/*
 chmod +x ${ADDON_DIR}/curl
 chmod +x ${ADDON_DIR}/state.tcl
