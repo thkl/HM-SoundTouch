@@ -228,6 +228,7 @@ proc ::soundtouch::queryAll {} {
 	  if {$player_name != "common"} {
   	  	set ip_address [ini::value $config $player_name "ip_address"]
   	  	getState $ip_address $player_name
+  	  	getVolume $ip_address $player_name
   	  }
     }
     ini::close $config
