@@ -45,7 +45,7 @@ puts {
 	</div>
 
 	<div style="padding-top: 5vw; padding-bottom: 5vw" class="ui container">
-		<h1 class="ui center aligned dividing header" data-i18n="title">Homematic CCU Bose Soundtouch AddIn</h1>
+		<h1 class="ui center aligned dividing header" data-i18n="title">HomeMatic CCU Bose Soundtouch addon</h1>
 	
 		<h2 class="ui header">
 			<i class="wifi icon"></i>
@@ -67,7 +67,7 @@ puts {
 	</div>
     
     <h2 class="ui header">
-			<i class="info icon"></i>
+			<i class="cogs icon"></i>
 			<div class="content">Daemon</div>
 		</h2>
 		<div style="width: 100%" class="ui">

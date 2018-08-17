@@ -49,4 +49,5 @@ Argument for the volume command is the new volume as number. if there is no argu
 CCU Variables:<br />
 BOSE_POWER_NAME - Logic Variable - System is on or off<br />
 BOSE_VOLUME_NAME - Number - Current Volume <br />
-BOSE_STATE_NAME - String - Current Device State
+BOSE_STATE_NAME - String - Current Device State <br />
+BOSE_STATE_TRACK - String - Current track playing<br />
