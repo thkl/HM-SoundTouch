@@ -34,6 +34,7 @@ chown -R root:root ${ADDON_DIR}/*
 chmod +x ${ADDON_DIR}/curl
 chmod +x ${ADDON_DIR}/state.tcl
 chmod +x ${ADDON_DIR}/add.tcl
+chmod +x ${ADDON_DIR}/stated.tcl
 chmod +x ${ADDON_DIR}/update_addon
 
 

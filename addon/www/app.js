@@ -72,8 +72,20 @@ function getInfo() {
        $("#info-info tbody").append($('<tr class="">').append(
 						$('<td>').append(data)))
     })
+    
+    rest("GET", "index.cgi?action=getRefresh" , null, function(data) {
+        $('#refresh').val(data.refresh)
+    })
 }
 
+
+function saveRefresh() {
+	var refreshTime = $('#refresh').val();
+	$('#refresh').val("Saving ...")
+	rest("GET", "index.cgi?action=setRefresh&refresh="+refreshTime , null, function(data) {
+        $('#refresh').val(data.refresh)
+    })
+}
 
 function getPlayer() {
 	rest("GET", "index.cgi?action=listplayer", null, function(data) {

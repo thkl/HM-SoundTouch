@@ -10,5 +10,5 @@ done
 chmod 755 "${tmp_dir}/update_script"
 
 cd ${tmp_dir};
-tar --exclude=.* -czvf "${addon_file}" *
+tar --exclude=.* --exclude=._* -czvf "${addon_file}" *
 rm -rf "${tmp_dir}"

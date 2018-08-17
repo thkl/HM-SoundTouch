@@ -7,12 +7,18 @@ RCD_DIR=${CONFIG_DIR}/rc.d
 
 case "$1" in
 	""|start)
+		echo "Starting soundtouch daemon..."
+		${ADDON_DIR}/stated.tcl
 	;;
 
 	stop)
+		echo "Stopping soundtouch daemon..."
+		${ADDON_DIR}/stated.tcl stop
 	;;
 
 	restart)
+		echo "Restarting soundtouch daemon..."
+		${ADDON_DIR}/stated.tcl
 	;;
 
 	info)
