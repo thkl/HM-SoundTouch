@@ -41,7 +41,7 @@ if {$argc > 0} {
       	::soundtouch::setVolume $player_ip $arg
         ::soundtouch::getVolume $player_ip $playername
 	  } else {
-		::soundtouch::getVolume $player_ip
+		::soundtouch::getVolume $player_ip $playername
     }
    }
 
