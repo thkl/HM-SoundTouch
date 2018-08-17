@@ -17,7 +17,10 @@ sourceOnce /www/cgi.tcl
 
 
 proc action_put_page {} {
-
+ puts "Content-Type: text/html"
+ puts "Status: 200 OK";
+ puts ""
+ puts "<meta http-equiv=\"refresh\" content=\"0; url=index.html\">"
 }
 
 proc action_removeplayer {} {

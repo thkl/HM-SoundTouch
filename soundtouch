@@ -28,7 +28,7 @@ case "$1" in
 		echo "Name: Bose Soundtouch"
 		echo "Version: ${version}"
 		echo "Operations: uninstall"
-		echo "Config-Url: /addons/${ADDON_NAME}"
+		echo "Config-Url: /addons/${ADDON_NAME}/index.html"
 		echo "Update: /addons/${ADDON_NAME}/update.cgi"
 	;;
 
