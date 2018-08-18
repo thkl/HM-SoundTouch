@@ -14,6 +14,8 @@ Commands:<br />
 <ul>
   <li>touch</li>
   <li>volume</li>
+  <li>createzone</li>
+  
 </ul><br />
 Arguments for the touch command:<br />
 <ul>
@@ -46,6 +48,10 @@ Arguments for the touch command:<br />
 Argument for the volume command is the new volume as number. if there is no argument the current volume will be fetched from the device.
 <br />
 <br />
+Arguments for the createzone command:Add all playernames you want to combine as an argument separated by a colon.
+Example : /usr/local/addons/soundtouch/state.tcl Bedroom createzone Hallway,Office,Basement<br />
+In this example the Bedroom speaker is now the master<br />
+<br /><br />
 CCU Variables:<br />
 BOSE_POWER_NAME - Logic Variable - System is on or off<br />
 BOSE_VOLUME_NAME - Number - Current Volume <br />

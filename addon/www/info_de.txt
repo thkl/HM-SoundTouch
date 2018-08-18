@@ -14,6 +14,7 @@ Kommandos:<br />
 <ul>
   <li>touch</li>
   <li>volume</li>
+  <li>createzone</li>
 </ul><br />
 Argumente für das Touch Kommando:<br />
 <ul>
@@ -46,6 +47,10 @@ Argumente für das Touch Kommando:<br />
 Das Argument für das Volume Kommando ist die gewünschte neue Lautstärke als Zahl. Wenn keine Lautstärke angegeben wurde, wird die aktuelle Lautstärke aus dem Player gelesen.
 <br />
 <br />
+Argument für das createzone Kommando:Füge alle Lautsprecher, die Du zusammenfügen möchtest getrennt mit einem Komma an.<br />
+Beispiel : /usr/local/addons/soundtouch/state.tcl Schlafzimmer createzone Flur,Bad,Garten<br />
+Der Lautsprecher Schlafzimmer dient ab dann als Master.<br />
+<br /><br />
 CCU Variablen:<br />
 BOSE_POWER_NAME - Logic Variable - Ist der Player ein oder ausgeschalten<br />
 BOSE_VOLUME_NAME - Zahl - aktuelle Lautstärke<br />

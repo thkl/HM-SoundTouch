@@ -155,7 +155,7 @@ proc ::soundtouch::removePlayer {name} {
 }
 
 
-proc ::soundtouch::getPlayer {player_name} {
+proc ::soundtouch::getPlayerIP {player_name} {
   variable config_file
   variable lock_id_config_file
   set ip_address ""
@@ -164,11 +164,27 @@ proc ::soundtouch::getPlayer {player_name} {
   if {[::ini::exists $config $player_name]} {
 	 set ip_address [ini::value $config $player_name "ip_address"]
   } else {
-	  ::log::log error "$name not in ini"
+	  ::log::log error "$player_name not in ini"
   }
   ini::close $config
   un_lock $lock_id_config_file
   return $ip_address
+}
+
+proc ::soundtouch::getPlayerID {player_name} {
+  variable config_file
+  variable lock_id_config_file
+  set playerId ""
+  lock $lock_id_config_file
+  set config [ini::open $config_file r]
+  if {[::ini::exists $config $player_name]} {
+	 set playerId [ini::value $config $player_name "deviceID"]
+  } else {
+	  ::log::log error "$player_name not in ini"
+  }
+  ini::close $config
+  un_lock $lock_id_config_file
+  return $playerId
 }
 
 proc ::soundtouch::getState {ip playername} {
@@ -207,6 +223,40 @@ proc ::soundtouch::setVolume {ip volume} {
   set parameter " <volume>$volume</volume>"
   set header "Content-Type: text/plain; charset=utf-8"
   exec $path/curl --silent --data $parameter -H $header $url
+}
+
+
+proc ::soundtouch::wsplit {str sepStr} {
+    if {![regexp $sepStr $str]} {
+        return $str}
+    set strList {}
+    set pattern (.*?)$sepStr
+    while {[regexp $pattern $str match left]} {
+        lappend strList $left
+        regsub $pattern $str {} str
+    }
+    lappend strList $str
+    return $strList
+}
+
+proc ::soundtouch::createZone {master slaveList} {
+  variable path
+  set slaves [wsplit $slaveList ","]
+  set masterID [getPlayerID $master]
+  set masterIp [getPlayerIP $master]
+  if {$masterID != ""} {
+	  set xml " <zone master=\"$masterID\">"
+	  foreach slave $slaves {
+		  set slaveIp [getPlayerIP $slave]
+		  set slaveId [getPlayerID $slave]
+		  append xml "<member ipaddress=\"$slaveIp\">$slaveId</member>"
+	  }
+	  append xml "</zone>"
+	  variable path
+	  set url "http://$masterIp:8090/setZone"
+	  set header "Content-Type: text/plain; charset=utf-8"
+	  exec $path/curl --silent --data $xml -H $header $url
+  }
 }
 
 proc ::soundtouch::getVolume {ip playername} {

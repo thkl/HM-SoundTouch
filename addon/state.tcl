@@ -25,7 +25,7 @@ if {$argc > 0} {
 	set playername  $name_or_ip
 	
 	if {![regexp {^(?:(\d{1,2})|(1\d{2})|(2[0-4]\d)|(25[0-5]))(?:\.((\d{1,2})|(1\d{2})|(2[0-4]\d)|(25[0-5]))){3}$} $name_or_ip]} {
-       set player_ip [expr {[::soundtouch::getPlayer $name_or_ip]}]
+       set player_ip [expr {[::soundtouch::getPlayerIP $name_or_ip]}]
 	} else {
        set player_ip  $name_or_ip
     }
@@ -45,9 +45,17 @@ if {$argc > 0} {
     }
    }
 
-  ::soundtouch::getState $player_ip $playername						
-  ::soundtouch::getVolume $player_ip $playername
+   if {$cmd=="createzone"} {
+	   
+	   	::log::log info "Create zone master $playername"
+	   	::soundtouch::createZone $playername $arg
+   }
 
+  if {$player_ip != ""} {
+  	::soundtouch::getState $player_ip $playername						
+  	::soundtouch::getVolume $player_ip $playername
+  }
+  
 } else {
   ::soundtouch::queryAll 	
 }
