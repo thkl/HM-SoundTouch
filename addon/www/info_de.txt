@@ -1,58 +1,153 @@
-Anleitung<br />
-======<br />
-<br />
-Als Erstes müssen die vorhandenen Soundtouch Player der Erweiterung bekannt gemacht werden. Nutze dazu die Player hinzufügen Funktion.<br />
-<br />
-Ab diesem Zeitpunkt (wenn das Hinzufügen erfolgreich war) kannst Du die Namen der Player benutzen, um diese anzusprechen ...
-<br />
+	<div style="width: 100%" class="ui">
+			Zuerst müssen die Player der Konfiguration hinzugefügt werden. Benutze bitte die Player hinzufügen Funktion oben.<br />
+			Ab dann kann der Name des Players benutzt werden um in direkt anzusprechen.<br />
+			<br />
+			Du kannst ein Kommando an den Player mittels folgendem Script senden:<br />
+			<i>string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl NAME KOMMANDO ARGUMENT",&stderr,&stdout);</i><br />
+	</div>
+	<br /><br />
+	<div style="width: 100%" class="ui">
+		<table id="idaemon" class="ui celled stackable table">
+			<thead><tr><th width="20%" >Kommando</th><th width="30%">Argument(e)</th><th width="50%">Beschreibung</th></tr></thead>
+			<tbody>
+			
+			<tr class="warning">
+				<td>touch</td>
+				<td><ul>
+					<li>PLAY</li>
+					<li>PAUSE</li>
+					<li>STOP</li>
+					<li>PREV_TRACK</li>
+					<li>NEXT_TRACK</li>
+					<li>THUMBS_UP</li>
+					<li>THUMBS_DOWN</li>
+					<li>POWER</li>
+					<li>MUTE</li>
+					<li>VOLUME_UP</li>
+					<li>VOLUME_DOWN</li>
+					<li>PRESET_1</li>
+					<li>PRESET_2</li>
+					<li>PRESET_3</li>
+					<li>PRESET_4</li>
+					<li>PRESET_5</li>
+					<li>PRESET_6</li>
+					<li>AUX_INPUT</li>
+					<li>SHUFFLE_OFF</li>
+					<li>SHUFFLE_ON</li>
+					<li>REPEAT_OFF</li>
+					<li>REPEAT_ONE</li>
+					<li>REPEAT_ALL</li>
+					<li>PLAY_PAUSE</li>
+					</ul>
+				</td>
+				<td>Sendet ein Bose Touch Kommando an den Player</td>
 
+			</tr>
+
+
+			<tr>
+				<td>volume</td>
+				<td>Neue Lautstärke zwischen 0 und 100</td>
+				<td>Stellt die Lautstärke des Players auf den angegebenen Wert. Wird kein Wert übergeben, wird die aktuelle Lautstärke ermittelt und in der passenden CCU Variablen gespeichert.</td>
+			
+			</tr>
+			
+			
+			<tr class="warning">
+				<td>createzone</td>
+				<td>Namen der Slave Player für die Zone. Kommagetrennt</td>
+				<td>Erzeugt eine neue Zone mit den angegebenen Playern. Werden keine Player übergeben, wird die Zone aufgelöst.<br />
+				Beispiel : /usr/local/addons/soundtouch/state.tcl Bad createzone Flur,Büro<br />
+				In diesem Beispiel ist der Player Bad der neue Master.
+				</td>
+			
+			</tr>
+			
+			<tr>
+				<td>addplayers</td>
+				<td>Namen der Player für das Kommando. Kommagetrennt</td>
+				<td>Die angegebenen Player werden der Zone hinzugefügt.<br />
+				Beispiel : /usr/local/addons/soundtouch/state.tcl Bad addplayers Garten<br />
+				In diesem Beispiel wird der Player Garten der Zone Bad hinzugefügt.
+				</td>
+			
+			</tr>
+
+			<tr class="warning">
+				<td>removeplayers</td>
+				<td>Namen der Player für das Kommando. Kommagetrennt</td>
+				<td>Die angegebenen Player werden aus der Zone entfernt.<br />
+				Beispiel : /usr/local/addons/soundtouch/state.tcl Bad removeplayers Garten,Büro<br />
+				In diesem Beispiel werden die Player Garten und Büro aus der Zone Bad entfernt.
+			</td>
+			
+			</tr>
+
+			
+			</tbody>
+            </table>
+</div>
+
+
+<div style="width: 100%" class="ui">
 <br />
-Script:<br />
-string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl NAME KOMMANDO ARGUMENT",&stderr,&stdout);<br />
+Homematic Script Beispiele:<br />
 <br />
-Kommandos:<br />
-<ul>
-  <li>touch</li>
-  <li>volume</li>
-  <li>createzone</li>
-</ul><br />
-Argumente für das Touch Kommando:<br />
-<ul>
-  <li>PLAY</li>
-  <li>PAUSE</li>
-<li>STOP</li>
-<li>PREV_TRACK</li>
-<li>NEXT_TRACK</li>
-<li>THUMBS_UP</li>
-<li>THUMBS_DOWN</li>
-<li>POWER</li>
-<li>MUTE</li>
-<li>VOLUME_UP</li>
-<li>VOLUME_DOWN</li>
-<li>PRESET_1</li>
-<li>PRESET_2</li>
-<li>PRESET_3</li>
-<li>PRESET_4</li>
-<li>PRESET_5</li>
-<li>PRESET_6</li>
-<li>AUX_INPUT</li>
-<li>SHUFFLE_OFF</li>
-<li>SHUFFLE_ON</li>
-<li>REPEAT_OFF</li>
-<li>REPEAT_ONE</li>
-<li>REPEAT_ALL</li>
-<li>PLAY_PAUSE</li>
-</ul>
-<br />
-Das Argument für das Volume Kommando ist die gewünschte neue Lautstärke als Zahl. Wenn keine Lautstärke angegeben wurde, wird die aktuelle Lautstärke aus dem Player gelesen.
-<br />
-<br />
-Argument für das createzone Kommando:Füge alle Lautsprecher, die Du zusammenfügen möchtest getrennt mit einem Komma an.<br />
-Beispiel : /usr/local/addons/soundtouch/state.tcl Schlafzimmer createzone Flur,Bad,Garten<br />
-Der Lautsprecher Schlafzimmer dient ab dann als Master.<br />
-<br /><br />
-CCU Variablen:<br />
-BOSE_POWER_NAME - Logic Variable - Ist der Player ein oder ausgeschalten<br />
-BOSE_VOLUME_NAME - Zahl - aktuelle Lautstärke<br />
-BOSE_STATE_NAME - Zeichenkette - aktueller Zustand des Players<br />
-BOSE_STATE_TRACK - Zeichenkette - aktuelle gespielter Track<br />
+<table id="idaemon" class="ui celled stackable table">
+	<tbody>
+<tr class="warning"><td>Schaltet den Player Test aus</td>
+<td>
+<pre>
+string name = "Test";
+string stdout;string stderr;
+!aktueller Zustand wird abgefragt
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name,&stderr,&stdout);
+!schaltet den player aus wenn er eingeschalten ist
+if (dom.GetObject("BOSE_POWER_"#name).State()==true) {
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch POWER",&stderr,&stdout);
+}
+</pre>
+</td></tr>
+
+<tr><td>Schaltet den Player Test ein und spiel Preset 1 ab</td>
+<td>
+<pre>
+string name = "Test";
+string stdout;string stderr;
+!aktueller Zustand wird abgefragt
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name,&stderr,&stdout);
+!player wird eingeschalten wenn er aus ist
+if (dom.GetObject("BOSE_POWER_"#name).State()==false) {
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch POWER",&stderr,&stdout);
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" volume 20",&stderr,&stdout);
+}
+!preset 1 wird abgespielt
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch PRESET_1",&stderr,&stdout);
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch PLAY",&stderr,&stdout);
+</pre>
+</td></tr>
+
+<tr class="warning"><td>Erzeugt eine Zone aus den Playern Bad,Wohnzimmer und Buero. Anschließend wird in dieser Zone Preset 2 abgespielt</td>
+<td>
+<pre>
+string master = "Bad";
+string slaves = "Wohnzimmer,Buero";
+string stdout;string stderr;
+!Zone wird angelegt
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" createzone "#slaves,&stderr,&stdout);
+!Abfrage des Masters
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master,&stderr,&stdout);
+!einschalten wenn aus
+if (dom.GetObject("BOSE_POWER_"#master).State()==false) {
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" touch POWER",&stderr,&stdout);
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" volume 20",&stderr,&stdout);
+}
+!preset 2 abspielen
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" touch PRESET_2",&stderr,&stdout);
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" touch PLAY",&stderr,&stdout);
+</pre>
+</td></tr>
+
+	</tbody>
+</table>
+</div>

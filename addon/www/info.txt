@@ -1,59 +1,155 @@
-README<br />
-======<br />
-<br />
-First you have to add players to config.Please use the Add Player Function above.<br />
-<br />
-At this point (if add was successfully) you can use the players name to address the device ...
-<br />
 
-<br />
-Script:<br />
-string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl NAME COMMAND ARGUMENT",&stderr,&stdout);<br />
-<br />
-Commands:<br />
-<ul>
-  <li>touch</li>
-  <li>volume</li>
-  <li>createzone</li>
-  
-</ul><br />
-Arguments for the touch command:<br />
-<ul>
-  <li>PLAY</li>
-  <li>PAUSE</li>
-<li>STOP</li>
-<li>PREV_TRACK</li>
-<li>NEXT_TRACK</li>
-<li>THUMBS_UP</li>
-<li>THUMBS_DOWN</li>
-<li>POWER</li>
-<li>MUTE</li>
-<li>VOLUME_UP</li>
-<li>VOLUME_DOWN</li>
-<li>PRESET_1</li>
-<li>PRESET_2</li>
-<li>PRESET_3</li>
-<li>PRESET_4</li>
-<li>PRESET_5</li>
-<li>PRESET_6</li>
-<li>AUX_INPUT</li>
-<li>SHUFFLE_OFF</li>
-<li>SHUFFLE_ON</li>
-<li>REPEAT_OFF</li>
-<li>REPEAT_ONE</li>
-<li>REPEAT_ALL</li>
-<li>PLAY_PAUSE</li>
-</ul>
-<br />
-Argument for the volume command is the new volume as number. if there is no argument the current volume will be fetched from the device.
-<br />
-<br />
-Arguments for the createzone command:Add all playernames you want to combine as an argument separated by a colon.
-Example : /usr/local/addons/soundtouch/state.tcl Bedroom createzone Hallway,Office,Basement<br />
-In this example the Bedroom speaker is now the master<br />
+	<div style="width: 100%" class="ui">
+			First you have to add players to config.Please use the Add Player Function above.<br />
+			At this point (if add was successfully) you can use the players name to address the device.<br />
+			<br />
+			You can send commands to your Soundtouch devices from any ccu program via the following script:<br />
+			<i>string stdout;string stderr;system.Exec("/usr/local/addons/soundtouch/state.tcl NAME COMMAND ARGUMENT",&stderr,&stdout);</i><br />
+	</div>
 <br /><br />
-CCU Variables:<br />
-BOSE_POWER_NAME - Logic Variable - System is on or off<br />
-BOSE_VOLUME_NAME - Number - Current Volume <br />
-BOSE_STATE_NAME - String - Current Device State <br />
-BOSE_STATE_TRACK - String - Current track playing<br />
+	<div style="width: 100%" class="ui">
+		<table id="idaemon" class="ui celled stackable table">
+			<thead><tr><th width="20%" >Command</th><th width="30%">Arguments</th><th width="50%">Description</th></tr></thead>
+			<tbody>
+			
+			<tr class="warning">
+				<td>touch</td>
+				<td><ul>
+					<li>PLAY</li>
+					<li>PAUSE</li>
+					<li>STOP</li>
+					<li>PREV_TRACK</li>
+					<li>NEXT_TRACK</li>
+					<li>THUMBS_UP</li>
+					<li>THUMBS_DOWN</li>
+					<li>POWER</li>
+					<li>MUTE</li>
+					<li>VOLUME_UP</li>
+					<li>VOLUME_DOWN</li>
+					<li>PRESET_1</li>
+					<li>PRESET_2</li>
+					<li>PRESET_3</li>
+					<li>PRESET_4</li>
+					<li>PRESET_5</li>
+					<li>PRESET_6</li>
+					<li>AUX_INPUT</li>
+					<li>SHUFFLE_OFF</li>
+					<li>SHUFFLE_ON</li>
+					<li>REPEAT_OFF</li>
+					<li>REPEAT_ONE</li>
+					<li>REPEAT_ALL</li>
+					<li>PLAY_PAUSE</li>
+					</ul>
+				</td>
+				<td>Sends a bose touch command to the player</td>
+
+			</tr>
+
+
+			<tr class="warning">
+				<td>volume</td>
+				<td>new volume as number between 0 and 100</td>
+				<td>Sets the new volume for the player. If the argument is empty the function returns the current volume into the corresponding ccu variable.</td>
+			
+			</tr>
+			
+			
+			<tr>
+				<td>createzone</td>
+				<td>Name of the slave players separated by a colon</td>
+				<td>Creates a new zone with players. If the argument is empty the zone will be removed.<br />
+				Example : /usr/local/addons/soundtouch/state.tcl Bedroom createzone Hallway,Office,Basement<br />
+				In this example the Bedroom speaker is now the master.
+				</td>
+			
+			</tr>
+			
+			<tr class="warning">
+				<td>addplayers</td>
+				<td>Name of the slave players separated by a colon</td>
+				<td>The given players will be added to the current zone.<br />
+				Example : /usr/local/addons/soundtouch/state.tcl Bedroom addplayers Garden<br />
+				In this example the Garden speaker will be added to the Bedroom zone.
+				</td>
+			
+			</tr>
+
+			<tr>
+				<td>removeplayers</td>
+				<td>Name of the slave players separated by a colon</td>
+				<td>The given players will be removed to the current zone.<br />
+				Example : /usr/local/addons/soundtouch/state.tcl Bedroom removeplayers Garden,Office<br />
+				In this example the Garden and the Office speaker will be removed to the Bedroom zone.
+			</td>
+			
+			</tr>
+
+			
+			</tbody>
+            </table>
+</div>
+
+
+<div style="width: 100%" class="ui">
+<br />
+Homematic Script Examples:<br />
+<br />
+<table id="idaemon" class="ui celled stackable table">
+	<tbody>
+<tr class="warning"><td>Switch off Player Test</td>
+<td>
+<pre>
+string name = "Test";
+string stdout;string stderr;
+!query current state
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name,&stderr,&stdout);
+!switch off if playing
+if (dom.GetObject("BOSE_POWER_"#name).State()==true) {
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch POWER",&stderr,&stdout);
+}
+</pre>
+</td></tr>
+
+<tr><td>Switch on player Test and play preset 1</td>
+<td>
+<pre>
+string name = "Test";
+string stdout;string stderr;
+!query current state
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name,&stderr,&stdout);
+!switch on if not playing
+if (dom.GetObject("BOSE_POWER_"#name).State()==false) {
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch POWER",&stderr,&stdout);
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" volume 20",&stderr,&stdout);
+}
+!play preset 1
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch PRESET_1",&stderr,&stdout);
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#name#" touch PLAY",&stderr,&stdout);
+</pre>
+</td></tr>
+
+<tr class="warning"><td>Creates a zone with Bathroom , Livingroom and Office. Afterwards the preset 2 will play.</td>
+<td>
+<pre>
+string master = "Bathroom";
+string slaves = "Livingroom,Office";
+string stdout;string stderr;
+!create Zone
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" createzone "#slaves,&stderr,&stdout);
+!query Master state
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master,&stderr,&stdout);
+!if not playing switch on
+if (dom.GetObject("BOSE_POWER_"#master).State()==false) {
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" touch POWER",&stderr,&stdout);
+  system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" volume 20",&stderr,&stdout);
+}
+!play preset 2
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" touch PRESET_2",&stderr,&stdout);
+system.Exec("/usr/local/addons/soundtouch/state.tcl "#master#" touch PLAY",&stderr,&stdout);
+</pre>
+</td></tr>
+
+	</tbody>
+</table>
+</div>
+

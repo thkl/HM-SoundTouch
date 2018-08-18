@@ -46,10 +46,17 @@ if {$argc > 0} {
    }
 
    if {$cmd=="createzone"} {
-	   
-	   	::log::log info "Create zone master $playername"
 	   	::soundtouch::createZone $playername $arg
    }
+
+   if {$cmd=="addplayers"} {
+	   	::soundtouch::addPlayerToZone $playername $arg
+   }
+
+   if {$cmd=="removeplayers"} {
+	   	::soundtouch::removePlayerFromZone $playername $arg
+   }
+
 
   if {$player_ip != ""} {
   	::soundtouch::getState $player_ip $playername						
