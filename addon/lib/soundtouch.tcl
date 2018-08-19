@@ -239,7 +239,7 @@ proc ::soundtouch::wsplit {str sepStr} {
     return $strList
 }
 
-proc ::soundtouch::_createZoneRequest {master slaveList} {
+proc ::soundtouch::createZoneRequest {master slaveList} {
   set slaves [wsplit $slaveList ","]
   set masterID [getPlayerID $master]
   set masterIp [getPlayerIP $master]
@@ -253,13 +253,15 @@ proc ::soundtouch::_createZoneRequest {master slaveList} {
 	  append xml "</zone>"
       return $xml
   } else {
+	  ::log::log error "Master not found"
 	  return ""
   }
 }
 
 proc ::soundtouch::createZone {master slaveList} {
   variable path
-  set xml [_createZoneRequest master $slaveList]
+  set masterIp [getPlayerIP $master]
+  set xml [createZoneRequest $master $slaveList]
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/setZone"
 	  set header "Content-Type: text/plain; charset=utf-8"
@@ -269,7 +271,8 @@ proc ::soundtouch::createZone {master slaveList} {
 
 proc ::soundtouch::removePlayerFromZone {master slaveList} {
   variable path
-  set xml [_createZoneRequest master $slaveList]
+  set masterIp [getPlayerIP $master]
+  set xml [_createZoneRequest $master $slaveList]
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/removeZoneSlave"
 	  set header "Content-Type: text/plain; charset=utf-8"
@@ -279,7 +282,8 @@ proc ::soundtouch::removePlayerFromZone {master slaveList} {
 
 proc ::soundtouch::addPlayerToZone {master slaveList} {
   variable path
-  set xml [_createZoneRequest master $slaveList]
+  set masterIp [getPlayerIP $master]
+  set xml [_createZoneRequest $master $slaveList]
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/addZoneSlave"
 	  set header "Content-Type: text/plain; charset=utf-8"
