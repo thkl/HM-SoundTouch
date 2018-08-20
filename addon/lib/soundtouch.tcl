@@ -141,7 +141,7 @@ proc ::soundtouch::listPlayer {} {
 	return $result
 }
 
-proc ::soundtouch::removePlayer {name} {
+proc ::soundtouch::deletePlayer {name} {
    variable config_file
    variable lock_id_config_file
    lock $lock_id_config_file
