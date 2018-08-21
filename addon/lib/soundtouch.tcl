@@ -261,6 +261,8 @@ proc ::soundtouch::createZoneRequest {master slaveList} {
 proc ::soundtouch::createZone {master slaveList} {
   variable path
   set masterIp [getPlayerIP $master]
+  # Add master to the memberlist
+  set slaveList "$master,${slaveList}"
   set xml [createZoneRequest $master $slaveList]
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/setZone"
