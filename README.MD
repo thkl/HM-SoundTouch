@@ -2,6 +2,8 @@ A simple tcl wrapper to control your Bose SoundTouch devices.
 
 Install this https://github.com/thkl/HM-SoundTouch/raw/master/hm-soundtouch.tar.gz at your ccu and reboot.
 
+_Please note: after the update from 0.0.10 to 0.0.11 you have to add your players again to the system._
+
 Then there is a small readme at http://ccuip/addons/soundtouch/. You may control your SoundTouch devices via system.Exec("/usr/local/addons/soundtouch/state.tcl NAME COMMAND ARGUMENT")
 ... but please see the readme ...
 

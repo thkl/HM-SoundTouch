@@ -45,6 +45,7 @@ if { "[lindex $argv 0 ]" != "daemon" } {
 		exec $argv0 daemon &
 	}
 } else {
+	::soundtouch::checkConfig
 	log::log info "main loop init"
 #	cd /
 #	foreach fd {stdin stdout stderr} {

@@ -54,8 +54,8 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.split(search).join(replacement);
 };
 
-function remove_player(playername) {
-	rest("GET", "index.cgi?action=removeplayer&name="+playername, null, function(data) {
+function remove_player(playerid) {
+	rest("GET", "index.cgi?action=removeplayer&playerid="+playerid, null, function(data) {
 	   getPlayer();
 	})
 }
@@ -99,7 +99,7 @@ function getPlayer() {
 				data.forEach(function(player) {
 				
 
-				var btnremove = $('<div class="ui red basic button" data-i18n="remove_player" id="button-remove-' + player.name + '">').append(i18next.t('remove_player')).attr('data-player-name', player.name)
+				var btnremove = $('<div class="ui red basic button" data-i18n="remove_player" id="button-remove-' + player.id + '">').append(i18next.t('remove_player')).attr('data-player-name', player.id)
 
 				btnremove.click(function() {
 					remove_player(this.getAttribute('data-player-name'));

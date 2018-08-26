@@ -24,8 +24,8 @@ proc action_put_page {} {
 }
 
 proc action_removeplayer {} {
-   catch { import name }
-   ::soundtouch::deletePlayer $name
+   catch { import playerid }
+   ::soundtouch::deletePlayerbyId $playerid
 }
 
 proc action_setRefresh {} {

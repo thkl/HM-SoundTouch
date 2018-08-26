@@ -47,7 +47,11 @@ proc ::soundtouch::loadSettings {key defaultValue} {
 	variable lock_id_config_file
 	lock $lock_id_config_file
 	set config [ini::open $config_file r]
-	set result [ini::value $config "common" $key $defaultValue]
+	if {[::ini::exists $config "common" $key]} {
+		set result [ini::value $config "common" $key $defaultValue]
+	} else {
+		set result $defaultValue
+	}
 	ini::close $config
 	un_lock $lock_id_config_file
 	return $result
@@ -80,6 +84,27 @@ proc ::soundtouch::checkConfig {} {
 	 puts $fo "#SoundTouch Config"
 	 close $fo
   }
+  # Check if we have a Version Number
+  # if not ditch the config and build a new one cause a config without the version has playnername as index and this changed in 0.0.10
+  
+  set version [::soundtouch::loadSettings "version" ""]
+  
+  if {$version == ""} {
+	file delete $config_file
+	# build a new
+	set fo [open $config_file "w"] 	  
+    puts $fo "#SoundTouch Config"
+	close $fo
+  }
+  
+  #get the plugin version
+  set fileHandle [open /usr/local/addons/soundtouch/VERSION r]
+  set cversion [string map {"\n" "" "\r" ""} [read $fileHandle]]
+  
+  #save the version if there is a new one
+  if {$cversion != $version} {
+	 saveSettings "version" $cversion
+  }
 }
 
 proc ::soundtouch::addPlayer {playerIP} {
@@ -96,20 +121,25 @@ proc ::soundtouch::addPlayer {playerIP} {
 	    lock $lock_id_config_file
 	    set config [ini::open $config_file r+]
 	    # Check if player allready exists
-		if {![::ini::exists $config $playerName]} {
+		
+		if {![::ini::exists $config "$playerID"]} {
+			
 			::log::log info "added $playerName to config"
-			ini::set $config $playerName "ip_address" $playerIP
+			ini::set $config "$playerID" "ip_address" $playerIP
 			#id needed for further updates 
-			ini::set $config $playerName "deviceID" $playerID
+			ini::set $config "$playerID" "deviceID" $playerID
+			ini::set $config "$playerID" "playerName" $playerName
 			ini::commit $config
 			#add variables to ccu
 			::rega::addVariable "BOSE_POWER_$playerName" "2" "2"
 			::rega::addVariable "BOSE_STATE_$playerName" "20" "11"
 			::rega::addVariable "BOSE_TRACK_$playerName" "20" "11"
 			::rega::addVariable "BOSE_VOLUME_$playerName" "4" "0"
+		
 		} else {
 			::log::log info "$playerName exists allready in config"
 		}
+		
 		ini::close $config
 		un_lock $lock_id_config_file
     }
@@ -123,16 +153,18 @@ proc ::soundtouch::listPlayer {} {
 	set result "\["
 	lock $lock_id_config_file
 	set config [ini::open $config_file r]
-	foreach player_name [ini::sections $config] {
-	  if {$player_name != "common"} {
-		set ip_address [ini::value $config $player_name "ip_address"]
+	foreach playerId [ini::sections $config] {
+	  if {$playerId != "common"} {
+		
+		set ip_address [ini::value $config "$playerId" "ip_address"]
+		set player_name [ini::value $config "$playerId" "playerName"]
 		
 		if {$first == 1} {
 			set first 0
          } else {
              append result ","
          }
-		append result "\{\"name\":\"$player_name\",\"ip\":\"$ip_address\"\}"
+		append result "\{\"name\":\"$player_name\",\"ip\":\"$ip_address\",\"id\":\"$playerId\"\}"
      }
     }
     append result "\]"
@@ -141,50 +173,90 @@ proc ::soundtouch::listPlayer {} {
 	return $result
 }
 
-proc ::soundtouch::deletePlayer {name} {
+
+proc ::soundtouch::getPlayerNamebyId {playerid} {
+	variable config_file
+	variable lock_id_config_file
+	lock $lock_id_config_file
+	set result ""
+	set config [ini::open $config_file r]
+	if {![::ini::exists $config "$playerid"]} {
+		set result [ini::value $config $playerId "playerName"]
+	}
+    ini::close $config
+	un_lock $lock_id_config_file
+	return $result
+}
+
+proc ::soundtouch::getPlayerIdbyName {playername} {
+	set result ""
+	# run thru all players
+	variable config_file
+	variable lock_id_config_file
+	lock $lock_id_config_file
+	set config [ini::open $config_file r]
+	foreach playerid [ini::sections $config] {
+	# do not use common section as a player
+	  if {$playerid != "common"} {
+  	  	set player_name [ini::value $config "$playerid" "playerName"]
+  	  	if {$player_name == $playername} {
+	  	  	set result $playerid 
+  	  	}
+  	  }
+    }
+    ini::close $config
+	un_lock $lock_id_config_file
+    return $result
+}
+
+proc ::soundtouch::deletePlayerbyId {playerid} {
+   
    variable config_file
    variable lock_id_config_file
    lock $lock_id_config_file
    set config [ini::open $config_file r+]
-   if {[::ini::exists $config $name]} {
-     ini::delete $config $name
+   if {[::ini::exists $config "$playerid"]} {
+	 ::log::log info "deleting $playerid from playerlist"
+     ini::delete $config "$playerid"
 	 ini::commit $config
    }
    ini::close $config
    un_lock $lock_id_config_file
+	
 }
 
 
+proc ::soundtouch::deletePlayer {name} {
+   set pid [getPlayerIdbyName "$name"]
+   if {$pid != ""} {
+	 deletePlayerbyId "$pid"  
+   }
+}
+
 proc ::soundtouch::getPlayerIP {player_name} {
-  variable config_file
-  variable lock_id_config_file
-  set ip_address ""
-  lock $lock_id_config_file
-  set config [ini::open $config_file r]
-  if {[::ini::exists $config $player_name]} {
-	 set ip_address [ini::value $config $player_name "ip_address"]
-  } else {
+  
+  set pid [getPlayerIdbyName "$player_name"]
+  if {$pid != ""} {
+  	variable config_file
+  	variable lock_id_config_file
+  	set ip_address ""
+  	lock $lock_id_config_file
+  	set config [ini::open $config_file r]
+  	if {[::ini::exists $config "$pid"]} {
+		 set ip_address [ini::value $config "$pid" "ip_address"]
+    } else {
 	  ::log::log error "$player_name not in ini"
+    }
+    ini::close $config
+    un_lock $lock_id_config_file
+    return $ip_address
+  } else {
+	return ""
   }
-  ini::close $config
-  un_lock $lock_id_config_file
-  return $ip_address
 }
 
 proc ::soundtouch::getPlayerID {player_name} {
-  variable config_file
-  variable lock_id_config_file
-  set playerId ""
-  lock $lock_id_config_file
-  set config [ini::open $config_file r]
-  if {[::ini::exists $config $player_name]} {
-	 set playerId [ini::value $config $player_name "deviceID"]
-  } else {
-	  ::log::log error "$player_name not in ini"
-  }
-  ini::close $config
-  un_lock $lock_id_config_file
-  return $playerId
+   return [getPlayerIdbyName "$player_name"]
 }
 
 proc ::soundtouch::getState {ip playername} {
@@ -239,6 +311,17 @@ proc ::soundtouch::wsplit {str sepStr} {
     return $strList
 }
 
+proc ::soundtouch::unSpaceName {name} {
+ set result [regsub "%20" $name " "]
+ return $result
+}
+
+proc ::soundtouch::spaceName {name} {
+ set result [regsub " " $name "%20"]
+ return $result
+}
+
+
 proc ::soundtouch::createZoneRequest {master slaveList} {
   set slaves [wsplit $slaveList ","]
   set masterID [getPlayerID $master]
@@ -264,6 +347,7 @@ proc ::soundtouch::createZone {master slaveList} {
   # Add master to the memberlist
   set slaveList "$master,${slaveList}"
   set xml [createZoneRequest $master $slaveList]
+  ::log::log info "XML is $xml"
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/setZone"
 	  set header "Content-Type: text/plain; charset=utf-8"
@@ -328,12 +412,13 @@ proc ::soundtouch::queryAll {} {
 	variable lock_id_config_file
 	lock $lock_id_config_file
 	set config [ini::open $config_file r]
-	foreach player_name [ini::sections $config] {
+	foreach playerId [ini::sections $config] {
 	# do not use common section as a player
-	  if {$player_name != "common"} {
-  	  	set ip_address [ini::value $config $player_name "ip_address"]
-  	  	getState $ip_address $player_name
-  	  	getVolume $ip_address $player_name
+	  if {$playerId != "common"} {
+  	  	set ip_address [ini::value $config "$playerId" "ip_address"]
+  	  	set player_name [ini::value $config "$playerId" "player_name"]
+  	  	getState $ip_address "$player_name"
+  	  	getVolume $ip_address "$player_name"
   	  }
     }
     ini::close $config
