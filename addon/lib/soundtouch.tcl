@@ -416,7 +416,7 @@ proc ::soundtouch::queryAll {} {
 	# do not use common section as a player
 	  if {$playerId != "common"} {
   	  	set ip_address [ini::value $config "$playerId" "ip_address"]
-  	  	set player_name [ini::value $config "$playerId" "player_name"]
+  	  	set player_name [ini::value $config "$playerId" "playerName"]
   	  	getState $ip_address "$player_name"
   	  	getVolume $ip_address "$player_name"
   	  }
