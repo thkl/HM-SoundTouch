@@ -13,8 +13,7 @@ sourceOnce /usr/local/addons/soundtouch/lib/rega.tcl
 namespace eval soundtouch {
 	variable config_file "/usr/local/etc/config/soundtouch.cfg"
 	variable path "/usr/local/addons/soundtouch/"
-	variable path_curl "/usr/bin/"
-	
+		
 	variable lock_start_port 12123
 	variable lock_socket
 	variable lock_id_config_file 1
@@ -110,11 +109,10 @@ proc ::soundtouch::checkConfig {} {
 
 proc ::soundtouch::addPlayer {playerIP} {
 	variable path
-	variable path_curl
 	variable config_file
 	variable lock_id_config_file
 	set url "http://$playerIP:8090/info"
-	set data [exec $path_curl/curl --silent $url]
+	set data [exec curl --silent $url]
 	regexp {<name>(.*?)</name>} $data match playerName
 	regexp {<info deviceID="(.*?)">} $data match playerID
 
@@ -263,9 +261,8 @@ proc ::soundtouch::getPlayerID {player_name} {
 
 proc ::soundtouch::getState {ip playername} {
   variable path
-  variable path_curl
   set url "http://$ip:8090/now_playing"
-  set data [exec $path_curl/curl --silent $url]
+  set data [exec curl --silent $url]
   regexp source=\"STANDBY\" $data match i
   if [info exists match] {
 	  ::rega::setVariable "BOSE_POWER_$playername" false
@@ -286,20 +283,18 @@ proc ::soundtouch::getState {ip playername} {
 
 proc ::soundtouch::keyAction {ip key state} {
   variable path
-  variable path_curl
   set url "http://$ip:8090/key"
   set parameter " <key state=\'$state\' sender=\'Gabbo\'>$key</key>'"
   set header "Content-Type: text/plain; charset=utf-8"
-  exec $path_curl/curl --silent --data $parameter -H $header $url
+  exec curl --silent --data $parameter -H $header $url
 }
 
 proc ::soundtouch::setVolume {ip volume} {
   variable path
-  variable path_curl
   set url "http://$ip:8090/volume"
   set parameter " <volume>$volume</volume>"
   set header "Content-Type: text/plain; charset=utf-8"
-  exec $path_curl/curl --silent --data $parameter -H $header $url
+  exec curl --silent --data $parameter -H $header $url
 }
 
 
@@ -348,7 +343,6 @@ proc ::soundtouch::createZoneRequest {master slaveList} {
 
 proc ::soundtouch::createZone {master slaveList} {
   variable path
-  variable path_curl
   set masterIp [getPlayerIP $master]
   # Add master to the memberlist
   set slaveList "$master,${slaveList}"
@@ -357,38 +351,35 @@ proc ::soundtouch::createZone {master slaveList} {
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/setZone"
 	  set header "Content-Type: text/plain; charset=utf-8"
-	  exec $path_curl/curl --silent --data $xml -H $header $url
+	  exec curl --silent --data $xml -H $header $url
   }
 }
 
 proc ::soundtouch::removePlayerFromZone {master slaveList} {
   variable path
-  variable path_curl
   set masterIp [getPlayerIP $master]
   set xml [_createZoneRequest $master $slaveList]
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/removeZoneSlave"
 	  set header "Content-Type: text/plain; charset=utf-8"
-	  exec $path_curl/curl --silent --data $xml -H $header $url
+	  exec curl --silent --data $xml -H $header $url
   }
 }
 
 proc ::soundtouch::addPlayerToZone {master slaveList} {
   variable path
-  variable path_curl
   set masterIp [getPlayerIP $master]
   set xml [_createZoneRequest $master $slaveList]
   if {$xml != ""} {
 	  set url "http://$masterIp:8090/addZoneSlave"
 	  set header "Content-Type: text/plain; charset=utf-8"
-	  exec $path_curl/curl --silent --data $xml -H $header $url
+	  exec curl --silent --data $xml -H $header $url
   }
 }
 
 
 proc ::soundtouch::removePlayer {master slaveList} {
   variable path
-  variable path_curl
   set slaves [wsplit $slaveList ","]
   set masterID [getPlayerID $master]
   set masterIp [getPlayerIP $master]
@@ -401,18 +392,16 @@ proc ::soundtouch::removePlayer {master slaveList} {
 	  }
 	  append xml "</zone>"
 	  variable path
-	  variable path_curl
 	  set url "http://$masterIp:8090/removeZoneSlave"
 	  set header "Content-Type: text/plain; charset=utf-8"
-	  exec $path_curl/curl --silent --data $xml -H $header $url
+	  exec curl --silent --data $xml -H $header $url
   }
 }
 
 proc ::soundtouch::getVolume {ip playername} {
   variable path
-  variable path_curl
   set url "http://$ip:8090/volume"
-  set data [exec $path_curl/curl --silent $url]
+  set data [exec curl --silent $url]
   regexp {<actualvolume>([0-9]{1,3})</actualvolume>} $data match i
   rega_script "var sv = dom.GetObject('BOSE_VOLUME_$playername');if (sv) {sv.State($i);}"
 }
@@ -428,7 +417,7 @@ proc ::soundtouch::queryAll {} {
 	  if {$playerId != "common"} {
   	  	set ip_address [ini::value $config "$playerId" "ip_address"]
   	  	set player_name [ini::value $config "$playerId" "playerName"]
-  	  	getState $ip_address "$player_name"
+		getState $ip_address "$player_name"
   	  	getVolume $ip_address "$player_name"
   	  }
     }
